@@ -25,11 +25,11 @@ void telegram_run() {
         String message = Serial.readString();
         telegram_bot->sendMessage(chat_id, message, "");
       }
-    }    
+    }
   }
 
   // Read incoming Telegram messages
-  int numNewMessages = telegraAndm_bot->getUpdates(telegram_bot->last_message_received + 1);
+  int numNewMessages = telegram_bot->getUpdates(telegram_bot->last_message_received + 1);
   while(numNewMessages) {
     Serial.println("got response");
     for (int i=0; i<numNewMessages; i++) {
