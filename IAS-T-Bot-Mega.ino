@@ -1,11 +1,12 @@
+#include "led.h"
+
+#define READY_STRING "Returning"
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   Serial3.begin(115200);
-}
-
-String processCommand(String command) {
-  return "got you";
+  led_setup();
 }
 
 void processSerialCommand(String command) {
@@ -44,8 +45,17 @@ void loop() {
       if (!response.equals("")) {
         Serial3.print("=" + chat_id + ":" + response);
       }
+    } else if (Serial3.peek() == READY_STRING[0]) {
+      String data = Serial3.readString();
+      if (data.startsWith(READY_STRING)) {
+        flash_hue(96);
+        Serial.println(data);
+      } else {
+        Serial.print(data);
+      }
     } else {
       Serial.write(Serial3.read());
     }
   }
+  led_loop();
 }
