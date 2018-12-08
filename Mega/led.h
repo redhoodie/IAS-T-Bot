@@ -7,7 +7,7 @@
 
 
 #define LED_PIN     5
-#define NUM_LEDS    11
+#define NUM_LEDS    57
 
 CRGB leds[NUM_LEDS];
 int led_brightness = 64;
@@ -44,10 +44,6 @@ String processCommand(String command) {
     command = command.substring(0, param_split);
   }
 
-  Serial.println(param_split);
-  Serial.println(command);
-  Serial.println(params);
-
   if (command == "strobe") {
     led_current_mode = "strobe";
     if (params != "") {
@@ -56,6 +52,14 @@ String processCommand(String command) {
       led_hue = 95;
     }
     return "Mode set to strobe.";
+  }
+  else if (command == "random") {
+    led_current_mode = "random";
+    return "Mode set to random.";
+  }
+  else if (command == "rainbow") {
+    led_current_mode = "rainbow";
+    return "Mode set to rainbow.";
   }
   else if (command == "police") {
     led_current_mode = "police";
@@ -134,7 +138,18 @@ void led_run() {
 
     led_phase = (led_phase + 1) % 6;
     FastLED.show();
-
+  } else if (led_current_mode == "rainbow") {
+    for (int i = 0; i < NUM_LEDS; i++) {
+      int hue = (255 / NUM_LEDS) * i;
+      int saturation = random(200, 255); // Shimmer
+      leds[i] = CHSV(hue, saturation, led_brightness);
+    }
+    FastLED.show();
+  } else if (led_current_mode == "random") {
+    for (int i = 0; i < NUM_LEDS; i++) {
+      leds[i] = CHSV(random(0, 255), 255, led_brightness);
+    }
+    FastLED.show();
   } else if (led_current_mode == "") {
     for (int i = 0; i < NUM_LEDS; i++) {
       leds[i] = CRGB::Black;
