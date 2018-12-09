@@ -88,8 +88,12 @@ String processCommand(String command) {
       return String("Current speed is ") + led_speed + ".";
     } else {
       led_speed = params.toInt();
-      led_thread.setInterval(led_speed);
-      return String("Set speed to ") + led_speed + ".";
+      if (led_speed > 2) {
+        led_thread.setInterval(led_speed);
+        return String("Set speed to ") + led_speed + ".";
+      } else {
+        return String("Speed must be more than 2.");
+      }
     }
   }
   else if (command == "/brightness" ) {
