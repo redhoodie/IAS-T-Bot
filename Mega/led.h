@@ -59,6 +59,13 @@ String processCommand(String command) {
   }
   else if (command == "/rainbow") {
     led_current_mode = "rainbow";
+    if (params == "") {
+      led_speed = 40;
+      led_thread.setInterval(led_speed);
+    } else {
+      led_speed = params.toInt();
+      led_thread.setInterval(led_speed);
+    }
     return "Mode set to rainbow.";
   }
   else if (command == "/police") {
@@ -140,10 +147,11 @@ void led_run() {
     FastLED.show();
   } else if (led_current_mode == "rainbow") {
     for (int i = 0; i < NUM_LEDS; i++) {
-      int hue = (255 / NUM_LEDS) * i;
+      int hue = (255 / NUM_LEDS) * (i + led_phase);
       int saturation = random(200, 255); // Shimmer
       leds[i] = CHSV(hue, saturation, led_brightness);
     }
+    led_phase = (led_phase + 1) % NUM_LEDS;
     FastLED.show();
   } else if (led_current_mode == "random") {
     for (int i = 0; i < NUM_LEDS; i++) {
