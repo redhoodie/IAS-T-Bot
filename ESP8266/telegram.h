@@ -2,10 +2,9 @@
 #ifndef telegram_h
 #define telegram_h
 
-//#include <ThreadController.h>
-//#include <StaticThreadController.h>
 #include <Thread.h>
 
+#include "string_utils.h"
 
 #include <UniversalTelegramBot.h>
 #include <WiFiClientSecure.h>
@@ -22,7 +21,7 @@ void telegram_run() {
     while(Serial.available()) {
       if (Serial.read() == '=') {
         String chat_id = Serial.readStringUntil(':');
-        String message = Serial.readString();
+        String message = Serial.readStringUntil('\n');
         telegram_bot->sendMessage(chat_id, message, "");
       }
     }
@@ -34,10 +33,18 @@ void telegram_run() {
     Serial.println("got response");
     for (int i=0; i<numNewMessages; i++) {
       telegram_last_chat_id = telegram_bot->messages[i].chat_id;
-      Serial.print('=');
-      Serial.print(telegram_last_chat_id);
-      Serial.print(":");
-      Serial.println(telegram_bot->messages[i].text);
+
+      size_t lines = 10;
+      String data = telegram_bot->messages[i].text;
+      for (int l = 0; l <= lines; l++) {
+        String message = getValue(data, '\n', l);
+        if (message.length() > 0) {
+          Serial.print('=');
+          Serial.print(telegram_last_chat_id);
+          Serial.print(":");
+          Serial.println(message);
+        }
+      }
     }
     numNewMessages = telegram_bot->getUpdates(telegram_bot->last_message_received + 1);
   }

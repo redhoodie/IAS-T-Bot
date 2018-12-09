@@ -10,7 +10,7 @@ void setup() {
 }
 
 void processSerialCommand(String command) {
-  Serial.println(processCommand(command));
+  Serial.println(processCommand("/" + command));
 }
 
 void loop() {
@@ -21,12 +21,12 @@ void loop() {
       // Discard '='
       Serial.read();
       String chat_id = Serial.readStringUntil(':');
-      String message = Serial.readString();
+      String message = Serial.readStringUntil('\n');
       message.trim();
       Serial.println("Sending message \"" + message + "\" to chat_id:" + chat_id);
       Serial3.print("=" + chat_id + ":" + message);
     } else {
-      processSerialCommand(Serial.readString());
+      processSerialCommand(Serial.readStringUntil('\n'));
     }
   }
 
@@ -35,7 +35,7 @@ void loop() {
       // Discard '='
       Serial3.read();
       String chat_id = Serial3.readStringUntil(':');
-      String message = Serial3.readString();
+      String message = Serial3.readStringUntil('\n');
       message.trim();
       Serial.print("Got message: \"");
       Serial.print(message);
@@ -46,7 +46,7 @@ void loop() {
         Serial3.print("=" + chat_id + ":" + response);
       }
     } else if (Serial3.peek() == READY_STRING[0]) {
-      String data = Serial3.readString();
+      String data = Serial3.readStringUntil('\n');
       if (data.startsWith(READY_STRING)) {
         flash_hue(96);
         Serial.println(data);

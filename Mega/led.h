@@ -44,7 +44,7 @@ String processCommand(String command) {
     command = command.substring(0, param_split);
   }
 
-  if (command == "strobe") {
+  if (command == "/strobe") {
     led_current_mode = "strobe";
     if (params != "") {
       led_hue = params.toInt();
@@ -53,15 +53,15 @@ String processCommand(String command) {
     }
     return "Mode set to strobe.";
   }
-  else if (command == "random") {
+  else if (command == "/random") {
     led_current_mode = "random";
     return "Mode set to random.";
   }
-  else if (command == "rainbow") {
+  else if (command == "/rainbow") {
     led_current_mode = "rainbow";
     return "Mode set to rainbow.";
   }
-  else if (command == "police") {
+  else if (command == "/police") {
     led_current_mode = "police";
     if (params == "") {
       led_speed = 40;
@@ -72,11 +72,11 @@ String processCommand(String command) {
     }
     return "Mode set to police.";
   }
-  else if (command == "stop") {
+  else if (command == "/stop") {
     led_current_mode = "";
     return "stopped.";
   }
-  else if (command == "speed" ) {
+  else if (command == "/speed" ) {
     if (params == "") {
       return String("Current speed is ") + led_speed + ".";
     } else {
@@ -85,7 +85,7 @@ String processCommand(String command) {
       return String("Set speed to ") + led_speed + ".";
     }
   }
-  else if (command == "brightness" ) {
+  else if (command == "/brightness" ) {
     if (params == "") {
       return String("Current brightness is ") + led_brightness + ".";
     } else {
